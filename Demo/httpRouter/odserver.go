@@ -1,9 +1,9 @@
 package odserver
 
 import (
+	"fmt"
 	"net/http"
 	"reflect"
-	"fmt"
 )
 
 const (
@@ -19,7 +19,6 @@ type OdServer struct {
 	HConfig *httpConfig
 	*Router
 }
-
 
 //接口函数单位，即我们编写代码逻辑的函数，用户自定义实现
 type HandlerFunc1 func(w http.ResponseWriter, req *http.Request)
@@ -48,6 +47,7 @@ func (o *OdServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 //判断需要执行的Http Method，从而查找对应的接口并且执行
 func (o *OdServer) doHandler(w http.ResponseWriter, req *http.Request) {
+	fmt.Println(req.URL)
 	c := NewContext(req, w)
 	if fo, exist := o.doMapping(req); exist {
 		o.ExecuteFunc(fo, c)

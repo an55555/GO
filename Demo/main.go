@@ -25,9 +25,17 @@ func HelloServer4(c *odserver.Context) {
 
 	fmt.Fprint(c.Rw, "hello world HelloServer4")
 }
+func getStatic(w http.ResponseWriter, req *http.Request) {
+	fs := http.FileServer(http.Dir("static/tmp"))
+	fmt.Println("getStatic")
+	staticFile := http.StripPrefix("/static", fs)
+	staticFile.ServeHTTP(w, req)
+}
 
 func main() {
+
 	o := odserver.Default()
+	o.Start("/").Target("/static/").Get(getStatic)
 	o.Start("/main").
 		Target("/test/").Get(HelloServer).Post(HelloServer).Delete(HelloServer).And().
 		Target("/test2").Get(HelloServer2)

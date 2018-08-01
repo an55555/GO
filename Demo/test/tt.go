@@ -1,4 +1,8 @@
-package odserver
+package main
+
+import (
+	"fmt"
+)
 
 type staticUrlMap []string
 
@@ -14,4 +18,13 @@ func newStaticPathConfig() *StaticPathConfig {
 
 func (s *StaticPathConfig) setStaticPath(url string) {
 	s.staticUrlMap = append(s.staticUrlMap, url)
+}
+
+func main() {
+	s1 := newStaticPathConfig()
+	fmt.Println(s1)
+	fmt.Println(len(s1.staticUrlMap))
+	s1.setStaticPath("abc/abcd")
+	fmt.Println(s1)
+	fmt.Println(len(s1.staticUrlMap))
 }

@@ -33,8 +33,8 @@ func getStatic(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-
 	o := odserver.Default()
+	o.SetStaticPath("/static")
 	o.Start("/").Target("/static/").Get(getStatic)
 	o.Start("/main").
 		Target("/test/").Get(HelloServer).Post(HelloServer).Delete(HelloServer).And().

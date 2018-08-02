@@ -18,6 +18,7 @@ type IOdServer interface {
 type OdServer struct {
 	HConfig *httpConfig
 	*Router
+	*StaticPathConfig
 }
 
 //接口函数单位，即我们编写代码逻辑的函数，用户自定义实现
@@ -28,8 +29,9 @@ type HandlerFunc1 func(w http.ResponseWriter, req *http.Request)
 
 func Default() *OdServer {
 	return &OdServer{
-		HConfig: DefaultConfig(),
-		Router:  NewRouter(),
+		HConfig:          DefaultConfig(),
+		Router:           NewRouter(),
+		StaticPathConfig: NewStaticPathConfig(),
 	}
 }
 

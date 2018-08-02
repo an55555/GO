@@ -6,12 +6,12 @@ type StaticPathConfig struct {
 	staticUrlMap
 }
 
-func newStaticPathConfig() *StaticPathConfig {
+func NewStaticPathConfig() *StaticPathConfig {
 	return &StaticPathConfig{
 		staticUrlMap: make([]string, 0),
 	}
 }
 
-func (s *StaticPathConfig) setStaticPath(url string) {
+func (s *StaticPathConfig) SetStaticPath(url string) {
 	s.staticUrlMap = append(s.staticUrlMap, url)
 }

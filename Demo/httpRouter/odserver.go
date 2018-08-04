@@ -37,19 +37,21 @@ func Default() *OdServer {
 
 //实现Handler接口，匹配方法以及路径
 func (o *OdServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	//设置http头部信息
-	for key, value := range o.HConfig.Header() {
-		w.Header().Add(key, value)
+	if bol, url, path := o.MapStaticPath(req.URL.Path); bol {
+		o.doStaticPath(w, req, url, path)
+	} else {
+		//设置http头部信息
+		for key, value := range o.HConfig.Header() {
+			w.Header().Add(key, value)
+		}
+
+		//转发给doHandler进行执行
+		o.doHandler(w, req)
 	}
-
-	//转发给doHandler进行执行
-	o.doHandler(w, req)
-
 }
 
 //判断需要执行的Http Method，从而查找对应的接口并且执行
 func (o *OdServer) doHandler(w http.ResponseWriter, req *http.Request) {
-	fmt.Println(req.URL)
 	c := NewContext(req, w)
 	if fo, exist := o.doMapping(req); exist {
 		o.ExecuteFunc(fo, c)

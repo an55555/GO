@@ -1,30 +1,21 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
-type staticUrlMap []string
-
-type StaticPathConfig struct {
-	staticUrlMap
-}
-
-func newStaticPathConfig() *StaticPathConfig {
-	return &StaticPathConfig{
-		staticUrlMap: make([]string, 0),
+func sli(s []int) string {
+	isBool := "A"
+	for item := range s {
+		fmt.Println(item)
+		if item == 3 {
+			isBool = "B"
+			return "c"
+		}
 	}
-}
-
-func (s *StaticPathConfig) setStaticPath(url string) {
-	s.staticUrlMap = append(s.staticUrlMap, url)
+	return isBool
 }
 
 func main() {
-	s1 := newStaticPathConfig()
-	fmt.Println(s1)
-	fmt.Println(len(s1.staticUrlMap))
-	s1.setStaticPath("abc/abcd")
-	fmt.Println(s1)
-	fmt.Println(len(s1.staticUrlMap))
+	test1 := []int{1, 2, 3, 4, 5}
+	test2 := sli(test1)
+	fmt.Println(test2)
 }

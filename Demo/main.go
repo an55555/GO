@@ -4,17 +4,23 @@ import (
 	"Golang-WEB/Demo/httpRouter"
 	"fmt"
 	"net/http"
-	"net/url"
+	"time"
 )
 
 func HelloServer(w http.ResponseWriter, req *http.Request) {
-	var params url.Values = req.URL.Query()
-	fmt.Println(params)
-	fmt.Fprint(w, "hello world")
-}
-func HelloServer2(c *odserver.Context) {
+	expiration := time.Now()
+	fmt.Println("之前时间%v", expiration)
+	//mm, _ := time.ParseDuration("1m")
+	//expiration = expiration.Add(mm)
+	fmt.Println("时间%v", expiration)
+	cookie := http.Cookie{Name: "username", Value: "astaxie", Expires: time.Now().AddDate(0, 0, 1)}
+	http.SetCookie(w, &cookie)
 
-	fmt.Fprint(c.Rw, "hello world test2")
+	fmt.Println("SetCookie")
+}
+func HelloServer2(w http.ResponseWriter, req *http.Request) {
+	cookie, _ := req.Cookie("username")
+	fmt.Fprint(w, cookie)
 }
 
 func HelloServer3(c *odserver.Context) {

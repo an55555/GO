@@ -56,19 +56,19 @@ func DeleteCookieServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	o := odserver.Default()
+	route := odserver.Default()
 
-	o.SetStaticPath("/static/", "static")
+	route.SetStaticPath("/static/", "static")
 
-	o.Target("/").Get(SayHello)
+	route.Target("/").Get(SayHello)
 
-	o.Start("/{test}/main/").Target("/number/{number}").
+	route.Start("/{test}/main/").Target("/number/{number}").
 		Get(SayHello).Post(SayHello)
 
-	o.Start("/cookie").
+	route.Start("/cookie").
 		Target("/read").Get(ReadCookieServer).And().
 		Target("/write").Get(WriteCookieServer).And().
 		Target("/delete").Get(DeleteCookieServer)
-	http.ListenAndServe(":6543", o)
+	http.ListenAndServe(":6543", route)
 
 }

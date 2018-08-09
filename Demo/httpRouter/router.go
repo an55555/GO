@@ -1,16 +1,16 @@
 package odserver
 
 import (
-	"strings"
 	"regexp"
+	"strings"
 	"time"
 )
 
 /**
 提供基本的路由功能，添加路由，查找路由
- */
+*/
 const (
-	GET         = iota
+	GET = iota
 	POST
 	PUT
 	DELETE
@@ -19,7 +19,7 @@ const (
 	OPTIONS
 	PATCH
 	TRACE
-	paramsSize  = 6
+	paramsSize = 6
 )
 
 var matcher PathMatcher = NewAntPathMatcher()
@@ -37,6 +37,12 @@ func NewRouter() *Router {
 type Router struct {
 	handler
 	regexpMap
+}
+
+func (r *Router) Target(url string) *HandlerObject {
+	HandlerObject := NewHandlerObject(r, AddSlash("/"))
+	HandlerObject.Target(url)
+	return HandlerObject
 }
 
 func (r *Router) Start(url string) *HandlerObject {

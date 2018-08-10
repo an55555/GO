@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GoLang-WEB/Demo/utils/session"
 	"Golang-WEB/Demo/httpRouter"
 	"fmt"
 	"net/http"
@@ -55,7 +56,10 @@ func DeleteCookieServer(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("<b>删除cookie成功。</b>\n"))
 }
 
+var gobalSession *session.Manager
+
 func main() {
+
 	route := odserver.Default()
 
 	route.SetStaticPath("/static/", "static")

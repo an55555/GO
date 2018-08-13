@@ -1,12 +1,14 @@
 package main
 
 import (
-	"GoLang-WEB/Demo/utils/session"
-	"Golang-WEB/Demo/httpRouter"
+	"./httpRouter"
+	"./utils/jwt"
 	"fmt"
 	"net/http"
 	"time"
 )
+
+const tokenCookieName = "tokenTest"
 
 func HelloServer(w http.ResponseWriter, req *http.Request) {
 	expiration := time.Now()
@@ -30,10 +32,14 @@ func SayHello(w http.ResponseWriter, req *http.Request) {
 }
 
 func ReadCookieServer(w http.ResponseWriter, req *http.Request) {
-	cookie, err := req.Cookie("testCookieName")
+	cookie, err := req.Cookie(tokenCookieName)
 	if err == nil {
 		cookieValue := cookie.Value
-		w.Write([]byte("<b>cookie的值是：" + cookieValue + "<b/>\n"))
+		userInfo, err := jwt.JwtDecode(cookieValue)
+		if !err {
+			w.Write([]byte("<b>cookie的值是：" + userInfo.UserName + "<b/>\n"))
+		}
+
 	} else {
 		w.Write([]byte("<b>读取错误" + err.Error() + "</b>\n"))
 	}
@@ -42,24 +48,23 @@ func ReadCookieServer(w http.ResponseWriter, req *http.Request) {
 func WriteCookieServer(w http.ResponseWriter, req *http.Request) {
 	nowTime := time.Now()
 	fmt.Println("当时时间%v", nowTime)
-	addTime, _ := time.ParseDuration("1m")
+	addTime, _ := time.ParseDuration("10m")
 	nowTime = nowTime.Add(addTime)
 	fmt.Println("增加后的时间%v", nowTime)
-	cookie := http.Cookie{Name: "testCookieName", Value: "testCookieValue", Expires: nowTime, Path: "/"}
+	tokenPayload := jwt.NewPayload("lanTest")
+	tokenTest := jwt.JwtCode(tokenPayload)
+	cookie := http.Cookie{Name: tokenCookieName, Value: tokenTest, Expires: nowTime, Path: "/"}
 	http.SetCookie(w, &cookie)
 	w.Write([]byte("<b>设置cookie成功。</b>\n"))
 }
 
 func DeleteCookieServer(w http.ResponseWriter, req *http.Request) {
-	cookie := http.Cookie{Name: "testCookieName", MaxAge: -1}
+	cookie := http.Cookie{Name: tokenCookieName, MaxAge: -1}
 	http.SetCookie(w, &cookie)
 	w.Write([]byte("<b>删除cookie成功。</b>\n"))
 }
 
-var gobalSession *session.Manager
-
 func main() {
-
 	route := odserver.Default()
 
 	route.SetStaticPath("/static/", "static")

@@ -2,6 +2,7 @@ package main
 
 import (
 	"./httpRouter"
+	"./utils/encrypt"
 	"./utils/jwt"
 	"fmt"
 	"net/http"
@@ -65,6 +66,9 @@ func DeleteCookieServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	encryptData := encrypt.EncryptSailt("我是谁")
+	fmt.Println("%x", encryptData)
+
 	route := odserver.Default()
 
 	route.SetStaticPath("/static/", "static")

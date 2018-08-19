@@ -120,6 +120,10 @@ func DeleteSlash(s string) string {
 
 //匹配路径
 func (r *Router) doUrlMapping(url string, method int) (FuncObject, bool) {
+	indexOf := strings.Index(url, "?")
+	if indexOf > -1 {
+		url = url[0:indexOf]
+	}
 	ch := make(chan *HandlerObject)
 	//精准匹配
 	go func() {

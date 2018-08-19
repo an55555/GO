@@ -6,6 +6,7 @@ import (
 	"./utils/jwt"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -16,8 +17,22 @@ func GetParams(c *odserver.Context) {
 	//fmt.Fprintf(w, "Hello astaxie!")
 }
 
-func SayHello(w http.ResponseWriter, req *http.Request) {
+func SayHello(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	for k, v := range r.Form {
+		fmt.Println("key:", k)
+		fmt.Println("val:", strings.Join(v, ""))
+	}
 	w.Write([]byte("Hello"))
+}
+func GetQuery(c *odserver.Context) {
+	fmt.Println(c.GoReq().URL.Query())
+	c.GoReq().ParseForm()
+	for k, v := range c.GoReq().Form {
+		fmt.Println("key:", k)
+		fmt.Println("val:", strings.Join(v, ""))
+	}
+	c.GoResW().Write([]byte("Hello"))
 }
 
 func ReadCookieServer(w http.ResponseWriter, req *http.Request) {
@@ -62,8 +77,7 @@ func main() {
 	route.SetStaticPath("/static/", "static")
 
 	route.Target("/").GoGet(SayHello)
-	route.Get("/get", SayHello).Get("/get2", SayHello)
-	route.Start("/new").Get("/1", SayHello).Get("/2", SayHello)
+	route.Target("/?abc=34").GoGet(SayHello)
 	route.Target("/params/{id}").GoGet(GetParams)
 
 	route.Start("/{test}/main/").Target("/number/{number}").
@@ -73,6 +87,10 @@ func main() {
 		Target("/read").GoGet(ReadCookieServer).And().
 		Target("/write").GoGet(WriteCookieServer).And().
 		Target("/delete").GoGet(DeleteCookieServer)
+
+	route.Get("/get", SayHello).Get("/get2", SayHello)
+	route.Get("/query", GetQuery)
+	route.Start("/new").Get("/1", SayHello).Get("/2", SayHello)
 	http.ListenAndServe(":6543", route)
 
 }

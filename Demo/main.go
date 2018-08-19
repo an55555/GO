@@ -26,13 +26,12 @@ func SayHello(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Hello"))
 }
 func GetQuery(c *odserver.Context) {
-	fmt.Println(c.GoReq().URL.Query())
-	c.GoReq().ParseForm()
-	for k, v := range c.GoReq().Form {
-		fmt.Println("key:", k)
-		fmt.Println("val:", strings.Join(v, ""))
+	//c.GoReq().ParseForm()
+	getQuery := ""
+	for k, v := range c.GoReq().URL.Query() {
+		getQuery = getQuery + k + ":" + strings.Join(v, "") + " "
 	}
-	c.GoResW().Write([]byte("Hello"))
+	c.GoResW().Write([]byte(getQuery))
 }
 
 func ReadCookieServer(w http.ResponseWriter, req *http.Request) {

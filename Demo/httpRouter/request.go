@@ -26,8 +26,8 @@ func NewFuncObject(f IHandlerFunc) FuncObject {
 type methodFuncs []FuncObject
 
 /**
-	关键struct，代表每个实体的请求
- */
+关键struct，代表每个实体的请求
+*/
 type HandlerObject struct {
 	*Router
 	//对应占位符的参数
@@ -64,15 +64,14 @@ func NewRequest(r *http.Request) Request {
 	return Request{Request: r}
 }
 
-func (ho *HandlerObject) Get(f IHandlerFunc) *HandlerObject {
+func (ho *HandlerObject) GoGet(f IHandlerFunc) *HandlerObject {
 	if ho.methodFuncs[GET].exist {
 		panic("GetFunc has existed")
 	}
 	ho.methodFuncs[GET] = NewFuncObject(f)
 	return ho
 }
-
-func (ho *HandlerObject) Post(f IHandlerFunc) *HandlerObject {
+func (ho *HandlerObject) GoPost(f IHandlerFunc) *HandlerObject {
 	if ho.methodFuncs[POST].exist {
 		panic("PostFunc has existed")
 	}
@@ -80,19 +79,41 @@ func (ho *HandlerObject) Post(f IHandlerFunc) *HandlerObject {
 	return ho
 }
 
-func (ho *HandlerObject) Put(f IHandlerFunc) *HandlerObject {
+func (ho *HandlerObject) GoPut(f IHandlerFunc) *HandlerObject {
 	if ho.methodFuncs[PUT].exist {
 		panic("PutFunc has existed")
 	}
 	ho.methodFuncs[PUT] = NewFuncObject(f)
 	return ho
 }
-func (ho *HandlerObject) Delete(f IHandlerFunc) *HandlerObject {
+func (ho *HandlerObject) GoDelete(f IHandlerFunc) *HandlerObject {
 	if ho.methodFuncs[DELETE].exist {
 		panic("DeleteFunc has existed")
 	}
 	ho.methodFuncs[PUT] = NewFuncObject(f)
 	return ho
+}
+
+func (ho *HandlerObject) Get(url string, f IHandlerFunc) *HandlerObject {
+	ho.Target(url)
+	ho.GoGet(f)
+	return NewHandlerObject(ho.Router, ho.startPath)
+}
+func (ho *HandlerObject) Post(url string, f IHandlerFunc) *HandlerObject {
+	ho.Target(url)
+	ho.GoPost(f)
+	return NewHandlerObject(ho.Router, ho.startPath)
+}
+
+func (ho *HandlerObject) Put(url string, f IHandlerFunc) *HandlerObject {
+	ho.Target(url)
+	ho.GoPut(f)
+	return NewHandlerObject(ho.Router, ho.startPath)
+}
+func (ho *HandlerObject) Delete(url string, f IHandlerFunc) *HandlerObject {
+	ho.Target(url)
+	ho.GoDelete(f)
+	return NewHandlerObject(ho.Router, ho.startPath)
 }
 
 func (ho *HandlerObject) Func(method int) (FuncObject, bool) {

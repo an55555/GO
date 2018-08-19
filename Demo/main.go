@@ -11,21 +11,9 @@ import (
 
 const tokenCookieName = "tokenTest"
 
-func HelloServer(w http.ResponseWriter, req *http.Request) {
-	expiration := time.Now()
-	fmt.Println("之前时间%v", expiration)
-	//mm, _ := time.ParseDuration("1m")
-	//expiration = expiration.Add(mm)
-	fmt.Println("时间%v", expiration)
-	cookie := http.Cookie{Name: "username", Value: "astaxie", Expires: time.Now().AddDate(0, 0, 1)}
-	http.SetCookie(w, &cookie)
-
-	fmt.Println("SetCookie")
-}
-
-func HelloServer4(c *odserver.Context) {
-
-	fmt.Fprint(c.Rw, "hello world HelloServer4")
+func GetParams(c *odserver.Context) {
+	fmt.Println(c.Params)
+	//fmt.Fprintf(w, "Hello astaxie!")
 }
 
 func SayHello(w http.ResponseWriter, req *http.Request) {
@@ -73,15 +61,18 @@ func main() {
 
 	route.SetStaticPath("/static/", "static")
 
-	route.Target("/").Get(SayHello)
+	route.Target("/").GoGet(SayHello)
+	route.Get("/get", SayHello).Get("/get2", SayHello)
+	route.Start("/new").Get("/1", SayHello).Get("/2", SayHello)
+	route.Target("/params/{id}").GoGet(GetParams)
 
 	route.Start("/{test}/main/").Target("/number/{number}").
-		Get(SayHello).Post(SayHello)
+		GoGet(SayHello).GoPost(SayHello)
 
 	route.Start("/cookie").
-		Target("/read").Get(ReadCookieServer).And().
-		Target("/write").Get(WriteCookieServer).And().
-		Target("/delete").Get(DeleteCookieServer)
+		Target("/read").GoGet(ReadCookieServer).And().
+		Target("/write").GoGet(WriteCookieServer).And().
+		Target("/delete").GoGet(DeleteCookieServer)
 	http.ListenAndServe(":6543", route)
 
 }

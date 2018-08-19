@@ -45,6 +45,27 @@ func (r *Router) Target(url string) *HandlerObject {
 	return HandlerObject
 }
 
+func (r *Router) Get(url string, f IHandlerFunc) *Router {
+	HandlerObject := NewHandlerObject(r, AddSlash("/"))
+	HandlerObject.Get(url, f)
+	return r
+}
+func (r *Router) Post(url string, f IHandlerFunc) *Router {
+	HandlerObject := NewHandlerObject(r, AddSlash("/"))
+	HandlerObject.Post(url, f)
+	return r
+}
+func (r *Router) Put(url string, f IHandlerFunc) *Router {
+	HandlerObject := NewHandlerObject(r, AddSlash("/"))
+	HandlerObject.Get(url, f)
+	return r
+}
+func (r *Router) Delete(url string, f IHandlerFunc) *Router {
+	HandlerObject := NewHandlerObject(r, AddSlash("/"))
+	HandlerObject.Delete(url, f)
+	return r
+}
+
 func (r *Router) Start(url string) *HandlerObject {
 	return NewHandlerObject(r, AddSlash(url))
 }

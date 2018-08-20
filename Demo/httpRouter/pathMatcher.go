@@ -1,8 +1,9 @@
 package odserver
 
 import (
-	"strings"
+	"fmt"
 	"regexp"
+	"strings"
 )
 
 const (
@@ -10,34 +11,34 @@ const (
 )
 
 type PathMatcher interface {
-
 	IsPattern(path string) bool
 	//将包含占位符的路径转换成正则表达式
-	ToPattern(path string) (string,bool)
+	ToPattern(path string) (string, bool)
 	Match(pattern, path string) (bool, error)
 }
-
 
 type AntPathMatcher struct {
 	pathSeparator string
 }
 
-func NewAntPathMatcher()AntPathMatcher  {
+func NewAntPathMatcher() AntPathMatcher {
 	return AntPathMatcher{pathSeparator: DefaultPathSeparator}
 }
 
 func (matcher AntPathMatcher) IsPattern(path string) bool {
 	return strings.IndexAny(path, "*") != -1 || strings.IndexAny(path, "?") != -1 || strings.IndexAny(path, "$") != -1
 }
-func (matcher AntPathMatcher) ToPattern(path string) (string ,bool) {
+func (matcher AntPathMatcher) ToPattern(path string) (string, bool) {
 
 	re := regexp.MustCompile("\\{\\w*}")
+	findParamsName := re.FindAll([]byte(path), -1)
+	fmt.Println(findParamsName)
 	s := re.ReplaceAllString(path, "\\w*")
 	if s == path {
-		return s,false
+		return s, false
 	}
 	s += "$"
-	return s ,true
+	return s, true
 }
 
 func (matcher AntPathMatcher) Match(pattern, path string) (bool, error) {

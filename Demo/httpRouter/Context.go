@@ -3,10 +3,11 @@ package odserver
 import "net/http"
 
 type Context struct {
-	Req    Request
-	Rw     responseWriter
+	Req Request
+	Rw  responseWriter
 	//对应restful的参数值
-	Params []string
+	Params    []string
+	ParamsMap map[string]string
 }
 
 func NewContext(r *http.Request, rw http.ResponseWriter) *Context {

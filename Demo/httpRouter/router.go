@@ -1,6 +1,7 @@
 package odserver
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 	"time"
@@ -137,6 +138,7 @@ func (r *Router) doUrlMapping(url string, method int) (FuncObject, bool) {
 			if k.MatchString(url) {
 				pathArray := strings.Split(url, "/")[1:]
 				regexpArray := strings.Split(k.String(), "/")[1:]
+				fmt.Println(regexpArray)
 				if len(pathArray) == len(regexpArray) {
 					//设置参数
 					paramsNum := 0

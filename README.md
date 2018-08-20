@@ -58,9 +58,26 @@ route.Target("/cookie/write").GoPost(WriteCookieServer)
 
 #### URL请求参数
 
-`route.Target("/params/{id}").Get(GetParams)`
+```javascript
+/query?name=ljz&age=100
+
+func GetQuery(c *odserver.Context) {
+	//c.GoReq().ParseForm()
+	getQuery := ""
+	for k, v := range c.GoReq().URL.Query() {
+		getQuery = getQuery + k + ":" + strings.Join(v, "") + " "
+	}
+	c.GoResW().Write([]byte(getQuery))
+}
+
+```
+
+#### body请求参数
+
 
 ```javascript
+route.Target("/params/{id}").Get(GetParams)
+
 func GetParams(c *odserver.Context) {
 	fmt.Println(c.Params)
 }

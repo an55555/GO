@@ -70,6 +70,8 @@ func DeleteCookieServer(w http.ResponseWriter, req *http.Request) {
 func main() {
 	encryptData := encrypt.EncryptSailt("我是谁")
 	fmt.Println("%x", encryptData)
+	encryptData2 := encrypt.Encrypt("我是谁")
+	fmt.Println("专家方案%x", encryptData2)
 
 	route := odserver.Default()
 

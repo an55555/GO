@@ -91,6 +91,7 @@ func (o *OdServer) doMapping(req *http.Request) (FuncObject, bool) {
 //执行编写的接口
 func (o *OdServer) ExecuteFunc(fo FuncObject, c *Context) {
 	c.Params = fo.params
+	c.ParamsName = fo.paramsName
 	hf := fo.f
 	ft := reflect.TypeOf(hf)
 	fv := reflect.ValueOf(hf)

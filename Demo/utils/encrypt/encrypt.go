@@ -24,6 +24,5 @@ func EncryptSailt(s string) string {
 // 专家方案
 func Encrypt(s string) string {
 	dk, _ := scrypt.Key([]byte(s), []byte(SALT), 16384, 8, 1, 32)
-	fmt.Println(dk)
 	return base64.StdEncoding.EncodeToString(dk)
 }

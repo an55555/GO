@@ -91,13 +91,18 @@ func (ho *HandlerObject) Target(url string) *HandlerObject {
 		ho.path = ho.startPath + url
 	}
 	//尝试将url转换成正则表达式，如果没有占位符，则转换不成功
-	pattern, ok := matcher.ToPattern(ho.path)
+	pattern, paramsNames, ok := matcher.ToPattern(ho.path)
 	if ok {
 		ho.path = pattern
 		re, err := regexp.Compile(pattern)
 		if err != nil {
 			panic("error compile pattern:" + pattern)
 		}
+		for k, v := range paramsNames {
+			paramsNames[k] = v[1 : len(v)-1]
+		}
+		fmt.Println("paramsNames", paramsNames)
+		ho.paramsName = paramsNames
 		ho.Router.regexpMap[re] = ho
 	} else {
 		ho.handler[ho.path] = ho
@@ -138,7 +143,6 @@ func (r *Router) doUrlMapping(url string, method int) (FuncObject, bool) {
 			if k.MatchString(url) {
 				pathArray := strings.Split(url, "/")[1:]
 				regexpArray := strings.Split(k.String(), "/")[1:]
-				fmt.Println(regexpArray)
 				if len(pathArray) == len(regexpArray) {
 					//设置参数
 					paramsNum := 0

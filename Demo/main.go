@@ -14,16 +14,18 @@ const tokenCookieName = "tokenTest"
 
 func GetParams(c *odserver.Context) {
 	fmt.Println(c.Params)
+	fmt.Println(c.GetParams())
 	//fmt.Fprintf(w, "Hello astaxie!")
 }
 
-func SayHello(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	for k, v := range r.Form {
+func SayHello(c *odserver.Context) {
+	c.GoReq().ParseForm()
+	for k, v := range c.GoReq().Form {
 		fmt.Println("key:", k)
 		fmt.Println("val:", strings.Join(v, ""))
 	}
-	w.Write([]byte("Hello"))
+	fmt.Println(c.GetParams())
+	c.GoResW().Write([]byte("Hello"))
 }
 func GetQuery(c *odserver.Context) {
 	//c.GoReq().ParseForm()

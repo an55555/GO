@@ -7,7 +7,8 @@ type Request struct {
 	*HandlerObject
 }
 type FuncObject struct {
-	params []string
+	params     []string
+	paramsName []string
 	//对应编写的接口，IHandlerFunc是个空接口
 	f     IHandlerFunc
 	exist bool
@@ -32,6 +33,8 @@ type HandlerObject struct {
 	*Router
 	//对应占位符的参数
 	params []string
+	//对应占位符的参数名
+	paramsName []string
 	//对该请求的http配置
 	*httpConfig
 	//请求路径 即start+target的路径
@@ -144,18 +147,21 @@ func (ho *HandlerObject) Func(method int) (FuncObject, bool) {
 func (ho *HandlerObject) getFunc() (FuncObject, bool) {
 	if ho.methodFuncs[GET].exist {
 		ho.methodFuncs[GET].params = ho.params
+		ho.methodFuncs[GET].paramsName = ho.paramsName
 	}
 	return ho.methodFuncs[GET], ho.methodFuncs[GET].exist
 }
 func (ho *HandlerObject) postFunc() (FuncObject, bool) {
 	if ho.methodFuncs[POST].exist {
 		ho.methodFuncs[POST].params = ho.params
+		ho.methodFuncs[POST].paramsName = ho.paramsName
 	}
 	return ho.methodFuncs[POST], ho.methodFuncs[POST].exist
 }
 func (ho *HandlerObject) putFunc() (FuncObject, bool) {
 	if ho.methodFuncs[PUT].exist {
 		ho.methodFuncs[PUT].params = ho.params
+		ho.methodFuncs[PUT].paramsName = ho.paramsName
 	}
 	return ho.methodFuncs[PUT], ho.methodFuncs[PUT].exist
 }
@@ -163,6 +169,7 @@ func (ho *HandlerObject) putFunc() (FuncObject, bool) {
 func (ho *HandlerObject) deleteFunc() (FuncObject, bool) {
 	if ho.methodFuncs[DELETE].exist {
 		ho.methodFuncs[DELETE].params = ho.params
+		ho.methodFuncs[DELETE].paramsName = ho.paramsName
 	}
 	return ho.methodFuncs[DELETE], ho.methodFuncs[DELETE].exist
 }
@@ -170,12 +177,14 @@ func (ho *HandlerObject) deleteFunc() (FuncObject, bool) {
 func (ho *HandlerObject) connectingFunc() (FuncObject, bool) {
 	if ho.methodFuncs[CONNECTIBNG].exist {
 		ho.methodFuncs[CONNECTIBNG].params = ho.params
+		ho.methodFuncs[CONNECTIBNG].paramsName = ho.paramsName
 	}
 	return ho.methodFuncs[CONNECTIBNG], ho.methodFuncs[CONNECTIBNG].exist
 }
 func (ho *HandlerObject) headFunc() (FuncObject, bool) {
 	if ho.methodFuncs[HEAD].exist {
 		ho.methodFuncs[HEAD].params = ho.params
+		ho.methodFuncs[HEAD].paramsName = ho.paramsName
 	}
 	return ho.methodFuncs[HEAD], ho.methodFuncs[HEAD].exist
 }
@@ -183,6 +192,7 @@ func (ho *HandlerObject) headFunc() (FuncObject, bool) {
 func (ho *HandlerObject) optionsFunc() (FuncObject, bool) {
 	if ho.methodFuncs[OPTIONS].exist {
 		ho.methodFuncs[OPTIONS].params = ho.params
+		ho.methodFuncs[OPTIONS].paramsName = ho.paramsName
 	}
 	return ho.methodFuncs[OPTIONS], ho.methodFuncs[OPTIONS].exist
 }
@@ -190,6 +200,7 @@ func (ho *HandlerObject) optionsFunc() (FuncObject, bool) {
 func (ho *HandlerObject) patchFunc() (FuncObject, bool) {
 	if ho.methodFuncs[PATCH].exist {
 		ho.methodFuncs[PATCH].params = ho.params
+		ho.methodFuncs[PATCH].paramsName = ho.paramsName
 	}
 	return ho.methodFuncs[PATCH], ho.methodFuncs[PATCH].exist
 }
@@ -197,6 +208,7 @@ func (ho *HandlerObject) patchFunc() (FuncObject, bool) {
 func (ho *HandlerObject) traceFunc() (FuncObject, bool) {
 	if ho.methodFuncs[TRACE].exist {
 		ho.methodFuncs[TRACE].params = ho.params
+		ho.methodFuncs[TRACE].paramsName = ho.paramsName
 	}
 	return ho.methodFuncs[TRACE], ho.methodFuncs[TRACE].exist
 }

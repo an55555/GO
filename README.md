@@ -76,9 +76,12 @@ func GetQuery(c *odserver.Context) {
 
 
 ```javascript
-route.Target("/params/{id}").Get(GetParams)
+route.Target("/params/{id}/{name}").Get(GetParams)
+
+当以/params/110/ljz访问时
 
 func GetParams(c *odserver.Context) {
-	fmt.Println(c.Params)
+	fmt.Println(c.Params) // ["110", "ljz"]
+	fmt.Println(c.GetParams) // map[id: "110", name: "ljz"]
 }
 ```

@@ -1,7 +1,6 @@
 package odserver
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 	"time"
@@ -101,7 +100,6 @@ func (ho *HandlerObject) Target(url string) *HandlerObject {
 		for k, v := range paramsNames {
 			paramsNames[k] = v[1 : len(v)-1]
 		}
-		fmt.Println("paramsNames", paramsNames)
 		ho.paramsName = paramsNames
 		ho.Router.regexpMap[re] = ho
 	} else {

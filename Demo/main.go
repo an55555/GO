@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "./DB"
 	"./httpRouter"
 	"./utils/encrypt"
 	"./utils/jwt"

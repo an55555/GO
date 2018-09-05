@@ -5,6 +5,7 @@ import (
 	"./httpRouter"
 	"./utils/encrypt"
 	"./utils/jwt"
+	"GoLang-WEB/Demo/utils/logs"
 	"fmt"
 	"net/http"
 	"strings"
@@ -95,6 +96,9 @@ func main() {
 	route.Get("/get", SayHello).Get("/get2", SayHello)
 	route.Get("/query", GetQuery)
 	route.Start("/new").Get("/1", SayHello).Get("/2", SayHello)
+
+	logs.Logger.Warn("来了一个Warn")
+	logs.Logger.Critical("test Critical message")
 	http.ListenAndServe(":6543", route)
 
 }

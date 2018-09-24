@@ -3,13 +3,15 @@ package main
 import (
 	_ "./DB"
 	"./httpRouter"
-	"./utils/encrypt"
 	"./utils/jwt"
+	"GoLang-WEB/Demo/utils/encrypt"
 	"GoLang-WEB/Demo/utils/logs"
 	"fmt"
 	"net/http"
 	"strings"
 	"time"
+	//"GoLang-WEB/Demo/models"
+	"./controller"
 )
 
 const tokenCookieName = "tokenTest"
@@ -95,10 +97,15 @@ func main() {
 
 	route.Get("/get", SayHello).Get("/get2", SayHello)
 	route.Get("/query", GetQuery)
-	route.Start("/new").Get("/1", SayHello).Get("/2", SayHello)
+	route.Start("/new").Get("/1", SayHello).Get("/2", SayHello).Post("/3", SayHello)
+	route.Start("/user").Put("/{uid}", userCtl.PutUser)
+	route.Start("/new2").Post("/1", SayHello)
 
 	logs.Logger.Warn("来了一个Warn")
-	logs.Logger.Critical("test Critical message")
+	//logs.Logger.Critical("test Critical message")
+	//id := users.InsertUser("lanjz", "1", 1)
+	//id := users.UpdateUser(6)
+	//fmt.Println(id)
 	http.ListenAndServe(":6543", route)
 
 }

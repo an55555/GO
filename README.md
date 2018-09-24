@@ -85,3 +85,10 @@ func GetParams(c *odserver.Context) {
 	fmt.Println(c.GetParams) // map[id: "110", name: "ljz"]
 }
 ```
+
+#### post参数
+
+```golang
+// 可获取formData和application/json形式的数据提交
+c.PostParams()
+```

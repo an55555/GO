@@ -1,6 +1,9 @@
 package odserver
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
 type Request struct {
 	*http.Request
@@ -93,7 +96,7 @@ func (ho *HandlerObject) GoDelete(f IHandlerFunc) *HandlerObject {
 	if ho.methodFuncs[DELETE].exist {
 		panic("DeleteFunc has existed")
 	}
-	ho.methodFuncs[PUT] = NewFuncObject(f)
+	ho.methodFuncs[DELETE] = NewFuncObject(f)
 	return ho
 }
 

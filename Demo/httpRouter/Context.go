@@ -2,7 +2,6 @@ package odserver
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -42,7 +41,7 @@ func (c *Context) GetParams() map[string]string {
 
 // 可获取formData和application/json形式的数据提交
 func (c *Context) PostParams() map[string]interface{} {
-	var jsonData map[string]interface{}
+	jsonData := make(map[string]interface{})
 	contentType := c.GoReq().Header.Get("Content-Type")
 	if contentType == "application/json" {
 		body, _ := ioutil.ReadAll(c.GoReq().Body)
@@ -50,9 +49,10 @@ func (c *Context) PostParams() map[string]interface{} {
 		return jsonData
 	}
 	c.GoReq().ParseForm()
-	// 将url.values转换成json格式，再转换为map[string] interface{}格式
-	toJson, _ := json.Marshal(c.GoReq().PostForm)
-	json.Unmarshal(toJson, &jsonData)
-	fmt.Println("jsonData11:", jsonData)
+	for i, k := range c.GoReq().PostForm {
+		if len(c.GoReq().PostForm[i]) > 0 {
+			jsonData[i] = k[0]
+		}
+	}
 	return jsonData
 }

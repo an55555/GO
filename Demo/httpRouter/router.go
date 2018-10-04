@@ -1,7 +1,6 @@
 package odserver
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 	"time"

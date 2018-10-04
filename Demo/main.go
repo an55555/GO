@@ -98,7 +98,9 @@ func main() {
 	route.Get("/get", SayHello).Get("/get2", SayHello)
 	route.Get("/query", GetQuery)
 	route.Start("/new").Get("/1", SayHello).Get("/2", SayHello).Post("/3", SayHello)
-	route.Start("/user").Put("/{uid}", userCtl.PutUser)
+	route.Start("/user").
+		Put("/{uid}", CTL.PutUser).
+		Post("", CTL.AddUser)
 	route.Start("/new2").Post("/1", SayHello)
 
 	logs.Logger.Warn("来了一个Warn")

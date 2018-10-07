@@ -102,23 +102,23 @@ func (ho *HandlerObject) GoDelete(f IHandlerFunc) *HandlerObject {
 func (ho *HandlerObject) Get(url string, f IHandlerFunc) *HandlerObject {
 	ho.Target(url)
 	ho.GoGet(f)
-	return NewHandlerObject(ho.Router, ho.startPath)
+	return ho
 }
 func (ho *HandlerObject) Post(url string, f IHandlerFunc) *HandlerObject {
 	ho.Target(url)
 	ho.GoPost(f)
-	return NewHandlerObject(ho.Router, ho.startPath)
+	return ho
 }
 
 func (ho *HandlerObject) Put(url string, f IHandlerFunc) *HandlerObject {
 	ho.Target(url)
 	ho.GoPut(f)
-	return NewHandlerObject(ho.Router, ho.startPath)
+	return ho
 }
 func (ho *HandlerObject) Delete(url string, f IHandlerFunc) *HandlerObject {
 	ho.Target(url)
 	ho.GoDelete(f)
-	return NewHandlerObject(ho.Router, ho.startPath)
+	return ho
 }
 
 func (ho *HandlerObject) Func(method int) (FuncObject, bool) {

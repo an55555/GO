@@ -108,14 +108,12 @@ func (o *OdServer) ExecuteFunc(fo FuncObject, c *Context) {
 	switch ft.String() {
 	case HF1:
 		{
-			fmt.Println("ft1", ft.String())
 			params = make([]reflect.Value, 2)
 			params[0] = reflect.ValueOf(c.GoResW())
 			params[1] = reflect.ValueOf(c.GoReq())
 		}
 	case HF2:
 		{
-			fmt.Println("ft2", ft.String())
 			params = make([]reflect.Value, 1)
 			params[0] = reflect.ValueOf(c)
 		}
@@ -126,6 +124,5 @@ func (o *OdServer) ExecuteFunc(fo FuncObject, c *Context) {
 			return
 		}
 	}
-	fmt.Println("fv", fv)
 	fv.Call(params)
 }

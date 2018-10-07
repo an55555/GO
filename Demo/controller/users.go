@@ -36,7 +36,6 @@ func userFilterFields(body map[string]interface{}, opType string) (map[string]in
 }
 
 func AddUser(c *odserver.Context) {
-	fmt.Println("addd")
 	resp := Resp{
 		DEFAULT_RETCODE,
 		"添加用户成功",
@@ -63,6 +62,42 @@ func AddUser(c *odserver.Context) {
 	}
 	_resp.Data = map[string]int64{
 		"uid": result,
+	}
+}
+
+func DeleteUser(c *odserver.Context) {
+	resp := Resp{
+		RetCode: DEFAULT_RETCODE,
+		Msg:     "用户删除成功",
+		Data:    "",
+	}
+	_resp := &resp
+	defer RESP(c, _resp)
+	uid := c.GetParams()["uid"]
+	i, err := strconv.Atoi(uid) // string类型转换为Int
+	if err != nil {
+		resp = Resp{
+			RetCode: "0",
+			Msg:     "uid类型错误",
+			Data:    err.Error(),
+		}
+		return
+	}
+	result, err := Models.DeleteUser(i)
+	if err != nil {
+		resp = Resp{
+			RetCode: "0",
+			Msg:     "修改信息失败",
+			Data:    err.Error(),
+		}
+		return
+	}
+	if result == 0 {
+		resp = Resp{
+			RetCode: "0",
+			Msg:     "删除失败",
+			Data:    "",
+		}
 	}
 }
 
@@ -109,6 +144,51 @@ func PutUser(c *odserver.Context) {
 			RetCode: "0",
 			Msg:     "修改信息失败",
 			Data:    "",
+		}
+	}
+}
+
+func FindUser(c *odserver.Context) {
+	resp := Resp{
+		RetCode: DEFAULT_RETCODE,
+		Msg:     "用户查找成功",
+		Data:    "",
+	}
+	_resp := &resp
+	defer RESP(c, _resp)
+	uid := c.GetParams()["uid"]
+	i, err := strconv.Atoi(uid) // string类型转换为Int
+	if err != nil {
+		resp = Resp{
+			RetCode: "0",
+			Msg:     "uid类型错误",
+			Data:    err.Error(),
+		}
+		return
+	}
+	result, getid, err := Models.UserDetail(i)
+	fmt.Println("result", result)
+	fmt.Println("getid", getid)
+	if err != nil {
+		resp = Resp{
+			RetCode: "0",
+			Msg:     "查询信息失败",
+			Data:    err.Error(),
+		}
+		return
+	}
+	if result == 0 {
+		resp = Resp{
+			RetCode: "0",
+			Msg:     "查询失败",
+			Data:    getid,
+		}
+	}
+	if result == 1 {
+		resp = Resp{
+			RetCode: "1",
+			Msg:     "用户查找成功",
+			Data:    getid,
 		}
 	}
 }

@@ -82,26 +82,29 @@ func main() {
 	route := odserver.Default()
 
 	route.SetStaticPath("/static/", "static")
+	/*
+		route.Target("/").GoGet(SayHello)
+		route.Target("/?abc=34").GoGet(SayHello)
+		route.Target("/params/{id}").GoGet(GetParams)
 
-	route.Target("/").GoGet(SayHello)
-	route.Target("/?abc=34").GoGet(SayHello)
-	route.Target("/params/{id}").GoGet(GetParams)
+		route.Start("/{test}/main/").Target("/number/{number}").
+			GoGet(SayHello).GoPost(SayHello)
 
-	route.Start("/{test}/main/").Target("/number/{number}").
-		GoGet(SayHello).GoPost(SayHello)
+		route.Start("/cookie").
+			Target("/read").GoGet(ReadCookieServer).And().
+			Target("/write").GoGet(WriteCookieServer).And().
+			Target("/delete").GoGet(DeleteCookieServer)
 
-	route.Start("/cookie").
-		Target("/read").GoGet(ReadCookieServer).And().
-		Target("/write").GoGet(WriteCookieServer).And().
-		Target("/delete").GoGet(DeleteCookieServer)
-
-	route.Get("/get", SayHello).Get("/get2", SayHello)
-	route.Get("/query", GetQuery)
-	route.Start("/new").Get("/1", SayHello).Get("/2", SayHello).Post("/3", SayHello)
+		route.Get("/get", SayHello).Get("/get2", SayHello)
+		route.Get("/query", GetQuery)
+		route.Start("/new").Get("/{id}", CTL.FindUser)*/
 	route.Start("/user").
+		Get("/{uid}", CTL.FindUser).
 		Put("/{uid}", CTL.PutUser).
-		Post("", CTL.AddUser)
-	route.Start("/new2").Post("/1", SayHello)
+		Post("", CTL.AddUser).
+		Delete("/{uid}", CTL.DeleteUser)
+
+	//route.Start("/new2").Post("/1", SayHello)
 
 	logs.Logger.Warn("来了一个Warn")
 	//logs.Logger.Critical("test Critical message")

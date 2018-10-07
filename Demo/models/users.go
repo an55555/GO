@@ -3,6 +3,7 @@ package Models
 import (
 	"GoLang-WEB/Demo/DB"
 	"GoLang-WEB/Demo/checkErr"
+	"database/sql"
 	"errors"
 	"strings"
 )
@@ -86,4 +87,53 @@ func UpdateUser(uid int, params map[string]interface{}) (int64, error) {
 		return 0, errors.New("没有需要修改的值")
 	}
 	return affect, nil
+}
+
+func DeleteUser(uid int) (int64, error) {
+	tx, err := db.Begin()
+	defer DB.ClearTrnsaction(tx, err)
+	stmt, err := tx.Prepare("delete from userlist where uid = ?")
+	if err != nil {
+		checkErr.Check(err)
+		return 0, err
+	}
+	res, err := stmt.Exec(uid)
+	if err != nil {
+		checkErr.Check(err)
+		return 0, err
+	}
+	affect, _ := res.RowsAffected()
+	if err := tx.Commit(); err != nil {
+		checkErr.Check(err)
+	}
+	if err != nil {
+		checkErr.Check(err)
+		return 0, err
+	}
+	if affect == 0 {
+		return 0, errors.New("删除失败")
+	}
+	return affect, nil
+}
+
+func UserDetail(uid int) (int64, string, error) {
+	tx, err := db.Begin()
+	var getUid string
+	defer DB.ClearTrnsaction(tx, err)
+	err = tx.QueryRow("select uid from userlist where uid = ?", uid).Scan(&getUid)
+	if err == sql.ErrNoRows {
+		return 0, getUid, errors.New("No user with that ID.")
+	} else if err != nil {
+		checkErr.Check(err)
+		return 0, getUid, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		checkErr.Check(err)
+	}
+	if err != nil {
+		checkErr.Check(err)
+		return 0, getUid, err
+	}
+	return 1, getUid, nil
 }

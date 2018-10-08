@@ -3,8 +3,10 @@ package Models
 import (
 	"GoLang-WEB/Demo/DB"
 	"GoLang-WEB/Demo/checkErr"
+	"GoLang-WEB/Demo/utils/encrypt"
 	"database/sql"
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -31,6 +33,14 @@ func ParamsToSqlPrepare(params map[string]interface{}) (string, []interface{}) {
 }
 
 func InsertUser(params map[string]interface{}) (int64, error) {
+	count, err := UserCount(params["username"].(string))
+	if err != nil {
+		return 0, err
+	}
+	if count > 0 {
+		return 0, errors.New("该用户名已经存在")
+	}
+	params["password"] = encrypt.EncryptSailt(params["password"].(string))
 	tx, err := db.Begin()
 	sqlString, exec := ParamsToSqlPrepare(params)
 	defer DB.ClearTrnsaction(tx, err)
@@ -136,4 +146,47 @@ func UserDetail(uid int) (int64, string, error) {
 		return 0, getUid, err
 	}
 	return 1, getUid, nil
+}
+
+func UserCount(username string) (int, error) {
+	var count int
+	tx, err := db.Begin()
+	defer DB.ClearTrnsaction(tx, err)
+	err = tx.QueryRow("select count(username) from userlist where username = ?", username).Scan(&count)
+	if err != nil {
+		checkErr.Check(err)
+		return 0, err
+	}
+	if err := tx.Commit(); err != nil {
+		checkErr.Check(err)
+	}
+	if err != nil {
+		checkErr.Check(err)
+		return 0, err
+	}
+	return count, nil
+}
+
+func VerifyUser(params map[string]interface{}) (int, error) {
+	userName := params["username"].(string)
+	password := params["password"].(string)
+	var count int
+	tx, err := db.Begin()
+	defer DB.ClearTrnsaction(tx, err)
+	err = tx.QueryRow("select count(uid) from userlist where username = ? AND password = ?", userName, password).Scan(&count)
+	if err == sql.ErrNoRows {
+		return 0, errors.New("No Find User")
+	} else if err != nil {
+		checkErr.Check(err)
+		return 0, err
+	}
+	if err := tx.Commit(); err != nil {
+		checkErr.Check(err)
+	}
+	if err != nil {
+		checkErr.Check(err)
+		return 0, err
+	}
+	fmt.Println("count", count)
+	return count, nil
 }

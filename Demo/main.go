@@ -104,6 +104,8 @@ func main() {
 		Post("", CTL.AddUser).
 		Delete("/{uid}", CTL.DeleteUser)
 
+	route.Post("/login", CTL.CheckUser)
+
 	//route.Start("/new2").Post("/1", SayHello)
 
 	logs.Logger.Warn("来了一个Warn")

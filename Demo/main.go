@@ -40,20 +40,6 @@ func GetQuery(c *odserver.Context) {
 	c.GoResW().Write([]byte(getQuery))
 }
 
-func ReadCookieServer(w http.ResponseWriter, req *http.Request) {
-	cookie, err := req.Cookie(tokenCookieName)
-	if err == nil {
-		cookieValue := cookie.Value
-		userInfo, err := jwt.JwtDecode(cookieValue)
-		if !err {
-			w.Write([]byte("<b>cookie的值是：" + userInfo.UserName + "<b/>\n"))
-		}
-
-	} else {
-		w.Write([]byte("<b>读取错误" + err.Error() + "</b>\n"))
-	}
-}
-
 func WriteCookieServer(w http.ResponseWriter, req *http.Request) {
 	nowTime := time.Now()
 	fmt.Println("当时时间%v", nowTime)
@@ -90,10 +76,7 @@ func main() {
 		route.Start("/{test}/main/").Target("/number/{number}").
 			GoGet(SayHello).GoPost(SayHello)
 
-		route.Start("/cookie").
-			Target("/read").GoGet(ReadCookieServer).And().
-			Target("/write").GoGet(WriteCookieServer).And().
-			Target("/delete").GoGet(DeleteCookieServer)
+
 
 		route.Get("/get", SayHello).Get("/get2", SayHello)
 		route.Get("/query", GetQuery)
@@ -105,6 +88,11 @@ func main() {
 		Delete("/{uid}", CTL.DeleteUser)
 
 	route.Post("/login", CTL.CheckUser)
+
+	route.Start("/cookie").
+		Target("/read").GoGet(CTL.ReadCookieServer).And().
+		Target("/write").GoGet(WriteCookieServer).And().
+		Target("/delete").GoGet(DeleteCookieServer)
 
 	//route.Start("/new2").Post("/1", SayHello)
 

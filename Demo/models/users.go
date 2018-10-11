@@ -167,7 +167,7 @@ func UserCount(username string) (int, error) {
 	return count, nil
 }
 
-func VerifyUser(params map[string]interface{}) (int, error) {
+func VerifyUser(params map[string]interface{}) (string, error) {
 	userName := params["username"].(string)
 	password := params["password"].(string)
 	var count int
@@ -175,18 +175,18 @@ func VerifyUser(params map[string]interface{}) (int, error) {
 	defer DB.ClearTrnsaction(tx, err)
 	err = tx.QueryRow("select count(uid) from userlist where username = ? AND password = ?", userName, password).Scan(&count)
 	if err == sql.ErrNoRows {
-		return 0, errors.New("No Find User")
+		return "", errors.New("No Find User")
 	} else if err != nil {
 		checkErr.Check(err)
-		return 0, err
+		return "", err
 	}
 	if err := tx.Commit(); err != nil {
 		checkErr.Check(err)
 	}
 	if err != nil {
 		checkErr.Check(err)
-		return 0, err
+		return "", err
 	}
 	fmt.Println("count", count)
-	return count, nil
+	return userName, nil
 }
